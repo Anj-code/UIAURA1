@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AURA – Maternal Support</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(180deg, #eef2ff, #ffffff);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #1f2937;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 360px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+
+    p {
+      font-size: 14px;
+      color: #6b7280;
+    }
+
+    .mic-btn {
+      margin: 40px auto;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: #6366f1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-size: 36px;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(99,102,241,0.4);
+      transition: transform 0.2s ease;
+    }
+
+    .mic-btn:active {
+      transform: scale(0.95);
+    }
+
+    .status {
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
+    /* Breathing animation */
+    .breathing {
+      width: 160px;
+      height: 160px;
+      margin: 30px auto;
+      border-radius: 50%;
+      background: rgba(99,102,241,0.2);
+      animation: breathe 6s infinite ease-in-out;
+      display: none;
+    }
+
+    @keyframes breathe {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.4); }
+      100% { transform: scale(1); }
+    }
+
+    .footer {
+      margin-top: 30px;
+      font-size: 12px;
+      color: #9ca3af;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h1>Hello, I’m AURA</h1>
+    <p>You can speak freely. I’m here.</p>
+
+    <div class="mic-btn" onclick="startListening()">🎤</div>
+    <div class="status" id="statusText">Tap to start voice check-in</div>
+
+    <div class="breathing" id="breathingCircle"></div>
+    <div class="status" id="breathingText"></div>
+
+    <div class="footer">
+      Not a diagnosis • You are not alone
+    </div>
+  </div>
+
+ <script>
+  let mediaRecorder;
+  let audioChunks = [];
+  let isRecording = false;
+  let stream;
+
+  async function toggleMic() {
+    if (!isRecording) {
+      startMic();
+    } else {
+      stopMic();
+    }
+  }
+
+  async function startMic() {
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorder = new MediaRecorder(stream);
+
+      audioChunks = [];
+      mediaRecorder.start();
+      isRecording = true;
+
+      document.getElementById("statusText").innerText = "I’m listening…";
+      document.getElementById("micBtn").innerText = "⏹️";
+
+      mediaRecorder.ondataavailable = event => {
+        audioChunks.push(event.data);
+      };
+
+      mediaRecorder.onstop = () => {
+        const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
+        console.log("Recorded audio blob:", audioBlob);
+
+        // 🔗 SEND THIS audioBlob TO YOUR AI BACKEND LATER
+        // fetch('/analyze', { method: 'POST', body: audioBlob })
+
+        triggerBreathing(); // demo behavior
+      };
+
+    } catch (err) {
+      alert("Microphone access denied.");
+      console.error(err);
+    }
+  }
+
+  function stopMic() {
+    mediaRecorder.stop();
+    stream.getTracks().forEach(track => track.stop());
+    isRecording = false;
+
+    document.getElementById("statusText").innerText = "Processing…";
+    document.getElementById("micBtn").innerText = "🎤";
+  }
+
+  function triggerBreathing() {
+    document.getElementById("breathingCircle").style.display = "block";
+    document.getElementById("breathingText").innerText =
+      "Breathe in… Breathe out…";
+    document.getElementById("statusText").innerText = "";
+  }
+</script>
+
+
+</body>
+</html>
