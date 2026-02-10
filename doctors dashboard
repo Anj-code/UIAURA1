@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      font-family: Inter, sans-serif;
+      background: #f9fafb;
+      padding: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .risk {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      color: white;
+    }
+
+    .green { background: #10b981; }
+    .yellow { background: #f59e0b; }
+    .red { background: #ef4444; }
+  </style>
+</head>
+
+<body>
+
+<h2>Patient Queue</h2>
+
+<div class="card">
+  <div>
+    <strong>Priya K. (24)</strong><br/>
+    Escalating trend ↑
+  </div>
+  <div class="risk red">RED</div>
+</div>
+
+<div class="card">
+  <div>
+    <strong>Ananya S. (29)</strong><br/>
+    Mild distress →
+  </div>
+  <div class="risk yellow">YELLOW</div>
+</div>
+
+<div class="card">
+  <div>
+    <strong>Meera R. (26)</strong><br/>
+    Stable ↓
+  </div>
+  <div class="risk green">GREEN</div>
+</div>
+
+</body>
+</html>
